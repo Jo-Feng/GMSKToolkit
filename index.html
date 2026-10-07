@@ -1,0 +1,712 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GMS Toolkit v0.4.1</title>
+  <style>
+:root{
+  --bg:#0a0d12;--panel:#121722;--panel2:#171d29;--line:#242c3a;--text:#f3f6fb;--muted:#8994a8;
+  --accent:#7c5cff;--accent2:#9d87ff;--good:#3ddc97;--warn:#ffcc66;--danger:#ff6b7a;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top right,#151229 0,#0a0d12 38%);color:var(--text);min-height:100vh}
+button,input,select{font:inherit}.app-shell{display:grid;grid-template-columns:240px 1fr;min-height:100vh}.sidebar{border-right:1px solid var(--line);padding:22px 16px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;background:rgba(8,11,16,.86);backdrop-filter:blur(14px)}
+.brand{display:flex;gap:12px;align-items:center;padding:6px 8px 24px}.logo{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-weight:900;font-size:20px;background:linear-gradient(135deg,var(--accent),#3ec5ff)}.brand-title{font-weight:800}.brand-sub,.muted{color:var(--muted)}.brand-sub{font-size:12px;margin-top:2px}.small{font-size:12px}.nav{display:flex;flex-direction:column;gap:6px}.nav-btn{border:0;background:transparent;color:var(--muted);text-align:left;padding:12px 13px;border-radius:10px;cursor:pointer}.nav-btn:hover,.nav-btn.active{background:#171c28;color:white}.nav-btn.active{box-shadow:inset 3px 0 0 var(--accent)}.sidebar-bottom{margin-top:auto;padding:10px 8px}.status-chip{display:inline-flex;gap:8px;align-items:center;font-size:12px;padding:8px 10px;border-radius:999px;background:#151b26;border:1px solid var(--line);margin-bottom:8px}.dot{width:8px;height:8px;background:var(--good);border-radius:50%;box-shadow:0 0 12px var(--good)}
+.main{padding:26px 30px 50px;min-width:0}.topbar{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:24px}.topbar h1{margin:0;font-size:27px}.topbar p{margin:5px 0 0;color:var(--muted)}.character-controls{display:flex;gap:10px}.character-controls select,.toolbar select,.hexa-form select,input{background:#101620;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px 12px}.btn{border:0;border-radius:10px;padding:10px 13px;cursor:pointer;font-weight:700}.btn.primary{background:linear-gradient(135deg,var(--accent),#5f43e9);color:white}.btn.secondary{background:#171d29;color:#e5e9f3;border:1px solid var(--line)}.btn.danger{background:rgba(255,107,122,.10);color:#ff8994;border:1px solid rgba(255,107,122,.25)}
+.view{display:none}.view.active{display:block}.hero-card{padding:28px;border:1px solid #312d55;border-radius:18px;background:linear-gradient(135deg,#18142d,#111827);display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.hero-card h2{font-size:32px;margin:4px 0}.hero-name-row{display:flex;align-items:center;gap:8px;min-height:46px}.hero-name-row h2{margin:4px 0}.rename-pencil{width:34px;height:34px;border-radius:9px;border:1px solid #3d3569;background:#211d3c;color:#cabfff;display:grid;place-items:center;cursor:pointer;font-size:17px;transition:.15s}.rename-pencil:hover{transform:translateY(-1px);filter:brightness(1.15)}.inline-rename{display:none;align-items:center;gap:7px}.inline-rename.active{display:flex}.inline-rename input{min-width:180px;font-size:20px;font-weight:800;padding:7px 10px}.rename-mini{border:1px solid var(--line);border-radius:8px;background:#171d29;color:#e5e9f3;padding:7px 9px;cursor:pointer;font-weight:800}.rename-mini.save{background:linear-gradient(135deg,var(--accent),#5f43e9);border-color:transparent;color:#fff}.hero-card p{margin:0;color:#aab2c2}.eyebrow{font-size:11px;letter-spacing:.18em;color:#aa98ff;font-weight:800}.hero-badge,.pill{padding:10px 14px;border-radius:999px;background:#211d3c;border:1px solid #3d3569;color:#cabfff;font-weight:800}.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}.stat-card,.panel{background:rgba(18,23,34,.93);border:1px solid var(--line);border-radius:15px}.stat-card{padding:18px}.stat-label{color:var(--muted);font-size:12px}.stat-value{font-size:24px;font-weight:850;margin-top:8px}.stat-foot{font-size:12px;color:var(--muted);margin-top:6px}.progress{height:5px;background:#242a36;border-radius:99px;margin-top:12px;overflow:hidden}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),#31c7ff);border-radius:99px}.two-col{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}.panel{padding:18px}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}.panel h3,.panel-head h3{margin:0}.panel-head p{margin:4px 0 0;color:var(--muted);font-size:12px}.text-btn{background:none;border:0;color:#a99bff;cursor:pointer}.mini-list{display:flex;flex-direction:column;gap:8px}.mini-row{display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:center;padding:10px 0;border-bottom:1px solid #202735}.mini-row:last-child{border-bottom:0}.mini-row .tag{font-size:11px;color:#a5afc1}.latest-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.latest-item{padding:12px;border-radius:12px;background:#0f141e;border:1px solid #232b38}.latest-name{font-weight:800}.latest-sub{font-size:11px;color:var(--muted);margin-top:5px}
+.toolbar{display:flex;justify-content:space-between;gap:12px;margin-bottom:12px;padding:12px}.search-wrap{flex:1}.search-wrap input{width:100%}.toolbar-right{display:flex;gap:8px}.boss-summary{display:flex;gap:25px;align-items:center;flex-wrap:wrap;margin-bottom:14px;font-size:13px}.boss-summary span{color:var(--muted)}.warning{color:var(--warn);font-weight:800}.hidden{display:none!important}.boss-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.boss-card{padding:14px;border-radius:14px;border:1px solid var(--line);background:var(--panel);transition:.15s}.boss-card.selected{border-color:#5f4bc8;box-shadow:0 0 0 1px rgba(124,92,255,.15) inset}.boss-card-top{display:flex;gap:10px;align-items:flex-start}.boss-check{margin-top:3px}.boss-name{font-weight:800;font-size:14px}.boss-diff{font-size:11px;color:#9aa4b6;margin-top:3px}.boss-meta{display:flex;justify-content:space-between;align-items:center;margin-top:13px;gap:8px}.boss-price{font-weight:800;color:#d8d2ff}.boss-party{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:11px}.boss-party select{background:#0e141e;border:1px solid var(--line);color:white;border-radius:8px;padding:5px 7px}
+.hexa-intro{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.hexa-intro h3{font-size:25px;margin:5px 0}.hexa-intro p{margin:0;color:var(--muted)}.hexa-layout{display:grid;grid-template-columns:1fr 1fr;gap:18px}.hexa-form label{display:block;font-size:12px;color:var(--muted);margin-bottom:7px}.hexa-form select,.hexa-form input{width:100%;margin-bottom:14px}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.note{margin-top:12px}.hexa-result{display:flex;flex-direction:column;justify-content:center;min-height:310px}.result-kicker{font-size:12px;color:var(--muted);margin-bottom:20px}.resource-row{display:flex;align-items:center;gap:15px;padding:16px 0;border-bottom:1px solid var(--line)}.resource-row:last-of-type{border-bottom:0}.resource-icon{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,#272046,#17465d);font-weight:900}.resource-value{font-size:30px;font-weight:900}.resource-label{font-size:12px;color:var(--muted)}.result-meta{margin-top:18px;color:#b0a6ef}.form-stack{display:flex;flex-direction:column;gap:10px;margin-top:14px}.button-stack{display:flex;flex-direction:column;gap:9px;margin-top:18px}.file-btn{display:block;text-align:center}.file-btn input{display:none}.source-panel{margin-top:18px}.source-panel li{margin:8px 0;color:#b3bdcd}.source-panel code{color:#c5bcff}.toast{position:fixed;right:24px;bottom:24px;background:#20293a;border:1px solid #344158;border-radius:10px;padding:12px 14px;opacity:0;transform:translateY(12px);pointer-events:none;transition:.2s}.toast.show{opacity:1;transform:translateY(0)}
+
+.boss-sections{display:flex;flex-direction:column;gap:22px}.boss-section{display:flex;flex-direction:column;gap:10px}.boss-section-title{display:flex;align-items:end;justify-content:space-between;gap:12px;padding:4px 2px}.boss-section-title h3{margin:0;font-size:18px}.boss-section-title p{margin:4px 0 0;color:var(--muted);font-size:12px}.boss-list{display:flex;flex-direction:column;gap:9px}.boss-group{display:grid;grid-template-columns:minmax(180px,1.05fr) minmax(300px,2fr) auto auto;gap:14px;align-items:center;padding:11px 13px;border:1px solid var(--line);border-radius:13px;background:var(--panel);transition:.15s}.boss-group.selected{border-color:#5f4bc8}.boss-group.excluded{opacity:.62;border-style:dashed}.boss-group-name{font-weight:800}.boss-group-sub{font-size:11px;color:var(--muted);margin-top:3px}.diff-buttons{display:flex;gap:7px;flex-wrap:wrap}.diff-btn{border:1px solid #384255;background:#202735;color:#c6cfdd;border-radius:8px;padding:7px 10px;font-size:11px;font-weight:850;cursor:pointer;text-transform:uppercase}.diff-btn:hover{filter:brightness(1.18)}.diff-btn.active{color:white;box-shadow:0 0 0 2px rgba(255,255,255,.08) inset}.diff-btn[data-diff="Easy"].active{background:#6b7280;border-color:#838b98}.diff-btn[data-diff="Normal"].active{background:#1c9fe0;border-color:#54bdf0}.diff-btn[data-diff="Hard"].active{background:#e83e8c;border-color:#ff73b3}.diff-btn[data-diff="Chaos"].active{background:#40352f;border-color:#725d52}.diff-btn[data-diff="Extreme"].active{background:#231810;border-color:#ff5a1f;color:#ff7247}.boss-group-party{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:11px}.boss-group-party select{background:#0e141e;border:1px solid var(--line);color:white;border-radius:8px;padding:7px}.boss-group-value{text-align:right;min-width:150px}.boss-value-main{font-weight:900;color:#d8d2ff}.boss-value-note{font-size:10px;color:var(--muted);margin-top:3px}.boss-value-note.drop{color:var(--warn);font-weight:800}.summary-split{display:flex;gap:20px;flex-wrap:wrap}.summary-box{padding-right:20px;border-right:1px solid var(--line)}.summary-box:last-child{border-right:0}.summary-label{color:var(--muted);font-size:11px}.summary-value{font-weight:850;margin-top:3px}.monthly-accent{color:#d69bff}.counted-accent{color:var(--good)}
+.diff-btn[data-tooltip]{position:relative}.diff-btn[data-tooltip]::after{content:attr(data-tooltip);position:absolute;left:50%;bottom:calc(100% + 9px);transform:translateX(-50%) translateY(4px);background:#070a10;color:#fff;border:1px solid #394257;box-shadow:0 10px 28px rgba(0,0,0,.38);padding:7px 9px;border-radius:8px;font-size:11px;font-weight:750;white-space:nowrap;opacity:0;pointer-events:none;transition:.14s;z-index:50;text-transform:none}.diff-btn[data-tooltip]::before{content:"";position:absolute;left:50%;bottom:calc(100% + 4px);transform:translateX(-50%);border:5px solid transparent;border-top-color:#394257;opacity:0;transition:.14s;z-index:49}.diff-btn[data-tooltip]:hover::after,.diff-btn[data-tooltip]:focus-visible::after,.diff-btn[data-tooltip]:hover::before,.diff-btn[data-tooltip]:focus-visible::before{opacity:1;transform:translateX(-50%) translateY(0)}
+.optimizer-intro{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:16px}.optimizer-intro h3{margin:5px 0;font-size:25px}.optimizer-intro p{margin:0;color:var(--muted);max-width:760px}.optimizer-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}.optimizer-columns{display:grid;grid-template-columns:1.25fr .75fr;gap:16px}.optimizer-list{display:flex;flex-direction:column;gap:8px;max-height:520px;overflow:auto;padding-right:4px}.opt-row{display:grid;grid-template-columns:minmax(145px,1fr) minmax(180px,1.2fr) auto;gap:12px;align-items:center;padding:11px 12px;background:#0f141e;border:1px solid #242c3a;border-radius:11px}.opt-row.sell{border-left:3px solid var(--good)}.opt-row.drop{border-left:3px solid var(--warn)}.opt-char{font-weight:850}.opt-boss{font-weight:750}.opt-sub{font-size:10px;color:var(--muted);margin-top:3px}.opt-value{text-align:right;font-weight:900;white-space:nowrap}.reason-tag{display:inline-flex;margin-top:4px;font-size:10px;padding:3px 6px;border-radius:999px;background:#292117;color:#ffd57a;border:1px solid #514125}.optimizer-note{margin-top:12px;padding:11px 12px;border-radius:10px;background:#101620;border:1px solid var(--line);font-size:12px;color:#aab3c4}.empty-state{padding:24px;text-align:center;color:var(--muted);border:1px dashed #30394a;border-radius:12px}.opt-section-count{font-size:12px;color:var(--muted)}.optimizer-filter{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 16px;padding:12px 14px;background:#111722;border:1px solid var(--line);border-radius:12px}.optimizer-filter label{font-size:12px;font-weight:800;color:#dce5f4}.optimizer-filter select{min-width:180px;background:#0d131d;color:#eef4ff;border:1px solid #30394a;border-radius:9px;padding:8px 11px;font-weight:750}.optimizer-filter .hint{font-size:11px;color:var(--muted)}.optimizer-filter .filter-metrics{margin-left:auto;font-size:12px;color:#b8c4d8;font-weight:750}.quota-panel{margin:0 0 16px}.quota-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.quota-card{padding:12px 14px;border-radius:12px;background:#0f141e;border:1px solid #273142}.quota-card.warn{border-color:#5a4722;background:#15130f}.quota-top{display:flex;justify-content:space-between;gap:12px;align-items:center}.quota-name{font-weight:850}.quota-status{font-size:10px;padding:3px 7px;border-radius:999px;background:#142319;color:#92efba;border:1px solid #28583b}.quota-card.warn .quota-status{background:#2b2110;color:#ffd57a;border-color:#5d461a}.quota-main{margin-top:8px;font-size:12px;color:#dfe8f6}.quota-main strong{font-size:16px}.quota-sub{margin-top:5px;font-size:10px;color:var(--muted)}
+@media(max-width:1100px){.optimizer-grid{grid-template-columns:1fr 1fr}.optimizer-columns{grid-template-columns:1fr}}
+@media(max-width:900px){.boss-group{grid-template-columns:1fr}.boss-group-value{text-align:left}.summary-box{border-right:0}}
+@media(max-width:1050px){.stats-grid{grid-template-columns:1fr 1fr}.boss-grid{grid-template-columns:1fr 1fr}.two-col{grid-template-columns:1fr}.hexa-layout{grid-template-columns:1fr}}
+@media(max-width:760px){.app-shell{grid-template-columns:1fr}.sidebar{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line)}.nav{display:grid;grid-template-columns:1fr 1fr}.sidebar-bottom{display:none}.main{padding:18px}.topbar{align-items:flex-start;flex-direction:column}.stats-grid,.boss-grid{grid-template-columns:1fr}.latest-grid{grid-template-columns:1fr}.character-controls{width:100%}.character-controls select{flex:1}}
+
+</style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">G</div>
+        <div>
+          <div class="brand-title">GMS Toolkit</div>
+          <div class="brand-sub">Kronos · v0.4</div>
+        </div>
+      </div>
+
+      <nav class="nav" id="nav">
+        <button class="nav-btn active" data-view="dashboard">总览</button>
+        <button class="nav-btn" data-view="boss">搬蛋 / Boss Crystal</button>
+        <button class="nav-btn" data-view="optimizer">180 蛋优化</button>
+        <button class="nav-btn" data-view="hexa">六转 HEXA</button>
+        <button class="nav-btn" data-view="data">数据与备份</button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="status-chip"><span class="dot"></span> GMS v270 数据</div>
+        <div class="muted small">蛋价校对：2026-10-07 · 游戏内截图</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <h1 id="page-title">总览</h1>
+          <p id="page-subtitle">GMS Heroic / Kronos 实用助手</p>
+        </div>
+        <div class="character-controls">
+          <select id="character-select"></select>
+          <button class="btn secondary" id="add-character">+ 角色</button>
+        </div>
+      </header>
+
+      <section class="view active" id="view-dashboard">
+        <div class="hero-card">
+          <div>
+            <div class="eyebrow">THIS WEEK</div>
+            <div class="hero-name-row">
+              <h2 id="hero-character">Main</h2>
+              <button class="rename-pencil" id="hero-rename-btn" type="button" title="重命名角色" aria-label="重命名角色">✎</button>
+              <div class="inline-rename" id="hero-rename-editor">
+                <input id="hero-rename-input" maxlength="30" aria-label="角色名称" />
+                <button class="rename-mini save" id="hero-rename-save" type="button">保存</button>
+                <button class="rename-mini" id="hero-rename-cancel" type="button">取消</button>
+              </div>
+            </div>
+            <p>把本周 Boss、结晶收益和 HEXA 资源集中到一个页面。</p>
+          </div>
+          <div class="hero-badge">Kronos</div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">角色 Weekly Crystal</div>
+            <div class="stat-value" id="dash-char-crystals">0 / 14</div>
+            <div class="progress"><span id="dash-char-progress"></span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">角色本周收益</div>
+            <div class="stat-value" id="dash-char-meso">0</div>
+            <div class="stat-foot">Meso</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">世界建议出售 Crystal</div>
+            <div class="stat-value" id="dash-world-crystals">0 / 180</div>
+            <div class="progress"><span id="dash-world-progress"></span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">世界本周收益</div>
+            <div class="stat-value" id="dash-world-meso">0</div>
+            <div class="stat-foot">自动最优化后</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h3>当前角色 Boss 摘要</h3>
+                <p>按单个结晶收益排序</p>
+              </div>
+              <button class="text-btn" data-jump="boss">去搬蛋 →</button>
+            </div>
+            <div id="dash-boss-list" class="mini-list"></div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h3>最新高阶 Boss</h3>
+                <p>当前 GMS 数据集中已包含</p>
+              </div>
+            </div>
+            <div class="latest-grid" id="latest-bosses"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" id="view-boss">
+        <div class="toolbar panel">
+          <div class="search-wrap">
+            <input id="boss-search" placeholder="搜索 Boss，例如 Baldrix / Jupiter / Lotus" />
+          </div>
+          <div class="toolbar-right">
+            <select id="boss-tier-filter">
+              <option value="all">全部</option>
+              <option value="endgame">高阶 / Endgame</option>
+              <option value="midgame">中阶</option>
+              <option value="early">前期</option>
+            </select>
+            <button class="btn secondary" id="boss-clear">清空本角色</button>
+          </div>
+        </div>
+
+        <div class="boss-summary panel">
+          <div><span>当前角色：</span><strong id="boss-char-name">Main</strong></div>
+          <div class="summary-split">
+            <div class="summary-box"><div class="summary-label">Weekly 已选择</div><div class="summary-value" id="boss-selected-count">0</div></div>
+            <div class="summary-box"><div class="summary-label">计入 Weekly</div><div class="summary-value counted-accent" id="boss-count">0 / 14</div></div>
+            <div class="summary-box"><div class="summary-label">Weekly Top 14 收益</div><div class="summary-value" id="boss-weekly-total">0 Meso</div></div>
+            <div class="summary-box"><div class="summary-label">Monthly 收益</div><div class="summary-value monthly-accent" id="boss-monthly-total">0 Meso</div></div>
+            <div class="summary-box"><div class="summary-label">合计</div><div class="summary-value" id="boss-total">0 Meso</div></div>
+          </div>
+          <div id="boss-limit-warning" class="warning hidden">Weekly Boss 超过 14 个：只统计实际价值最高的 14 颗蛋。</div>
+        </div>
+
+        <div id="boss-sections" class="boss-sections">
+          <section class="boss-section">
+            <div class="boss-section-title"><div><h3>Weekly Boss</h3><p>同一 Boss 只可选择一个难度；超过 14 个后自动保留价值最高的 14 个。</p></div></div>
+            <div id="weekly-boss-list" class="boss-list"></div>
+          </section>
+          <section class="boss-section">
+            <div class="boss-section-title"><div><h3>Monthly Boss</h3><p>月度 Boss 独立统计，不占角色 14 个 Weekly Crystal 名额。</p></div></div>
+            <div id="monthly-boss-list" class="boss-list"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="view" id="view-optimizer">
+        <div class="panel optimizer-intro">
+          <div>
+            <div class="eyebrow">ACCOUNT OPTIMIZER</div>
+            <h3>180 蛋自动最优化</h3>
+            <p>把每个角色能稳定完成的 Boss 在「搬蛋」页勾上即可。角色每周 14 个 Weekly Crystal 由游戏自动按高价优先并补差价；工具只把这一步当作“可售候选”筛选。真正需要你操作的是世界 180 个名额：系统会告诉你每个角色该占多少名额，以及哪些低价 Crystal 不要卖。</p>
+          </div>
+          <div class="pill">14 / 角色 · 180 / 世界</div>
+        </div>
+
+        <div class="optimizer-grid">
+          <div class="stat-card">
+            <div class="stat-label">已记录角色</div>
+            <div class="stat-value" id="opt-char-count">0</div>
+            <div class="stat-foot">参与账户优化</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">角色自动筛选后的候选</div>
+            <div class="stat-value" id="opt-eligible-count">0</div>
+            <div class="stat-foot">Weekly 高价 14 + Monthly</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">建议出售</div>
+            <div class="stat-value" id="opt-sell-count">0 / 180</div>
+            <div class="stat-foot" id="opt-drop-foot">世界名额充足</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">最大本周收益</div>
+            <div class="stat-value" id="opt-max-meso">0</div>
+            <div class="stat-foot">按实际组队分摊后的 Meso</div>
+          </div>
+        </div>
+
+        <div class="optimizer-filter">
+          <label for="optimizer-char-filter">角色筛选</label>
+          <select id="optimizer-char-filter"></select>
+          <span class="hint">筛选某个角色后，只看这个角色应该卖什么、为了世界 180 上限应跳过什么；全账户最优结果不变。</span>
+          <span class="filter-metrics" id="optimizer-filter-metrics"></span>
+        </div>
+
+        <div class="panel quota-panel">
+          <div class="panel-head">
+            <div><h3>各角色世界名额分配</h3><p>角色 14 个 Weekly 的替换/补差价由游戏处理；这里专门告诉你世界 180 上限下，每个角色实际建议占多少个出售名额。</p></div>
+          </div>
+          <div id="optimizer-quota-grid" class="quota-grid"></div>
+        </div>
+
+        <div class="optimizer-columns">
+          <div class="panel">
+            <div class="panel-head">
+              <div><h3>建议出售</h3><p>最终进入世界 180 名额的 Crystal，按价值从高到低排列。</p></div>
+              <div class="opt-section-count" id="opt-sell-summary"></div>
+            </div>
+            <div id="opt-sell-list" class="optimizer-list"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head">
+              <div><h3>世界 180：建议跳过</h3><p>这里只显示已经通过角色高价 14 筛选、但因为世界 180 名额不足而不应该卖的低价 Crystal。</p></div>
+              <div class="opt-section-count" id="opt-drop-summary"></div>
+            </div>
+            <div id="opt-drop-list" class="optimizer-list"></div>
+          </div>
+        </div>
+        <div class="optimizer-note">角色超过 14 个 Weekly 的低价蛋不再作为“建议舍弃”显示：GMS 会按更高价值 Weekly Crystal 自动补差价。这个页面现在只把 <strong>世界 180 名额</strong> 当作需要手动规划的稀缺资源。Monthly Boss 不占角色 14 个 Weekly 名额，但出售时仍占世界 180 个名额。</div>
+      </section>
+
+      <section class="view" id="view-hexa">
+        <div class="panel hexa-intro">
+          <div>
+            <div class="eyebrow">HEXA MATRIX</div>
+            <h3>六转材料计算器</h3>
+            <p>选择核心类型和当前 / 目标等级，自动计算 Sol Erda 与 Fragment。</p>
+          </div>
+          <div class="pill">Lv. 0–30</div>
+        </div>
+
+        <div class="hexa-layout">
+          <div class="panel hexa-form">
+            <label>核心类型</label>
+            <select id="hexa-type">
+              <option value="origin">Origin Skill</option>
+              <option value="ascent">Ascent Skill</option>
+              <option value="mastery">Mastery Node</option>
+              <option value="boost">Boost Node</option>
+              <option value="common">Sol Janus / Sol Hecate</option>
+            </select>
+
+            <div class="form-row">
+              <div>
+                <label>当前等级</label>
+                <input type="number" id="hexa-current" min="0" max="30" value="1" />
+              </div>
+              <div>
+                <label>目标等级</label>
+                <input type="number" id="hexa-target" min="0" max="30" value="30" />
+              </div>
+            </div>
+
+            <button class="btn primary" id="hexa-calc">计算材料</button>
+            <div class="muted small note">Origin 初次六转默认从 Lv.1 开始；其余核心按实际激活等级填写。</div>
+          </div>
+
+          <div class="panel hexa-result">
+            <div class="result-kicker">所需资源</div>
+            <div class="resource-row">
+              <div class="resource-icon">E</div>
+              <div>
+                <div class="resource-value" id="hexa-erda">0</div>
+                <div class="resource-label">Sol Erda</div>
+              </div>
+            </div>
+            <div class="resource-row">
+              <div class="resource-icon">F</div>
+              <div>
+                <div class="resource-value" id="hexa-frag">0</div>
+                <div class="resource-label">Sol Erda Fragments</div>
+              </div>
+            </div>
+            <div class="result-meta" id="hexa-range">Lv.1 → Lv.30</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" id="view-data">
+        <div class="two-col">
+          <div class="panel">
+            <h3>角色管理</h3>
+            <div class="form-stack">
+              <label>当前角色名称</label>
+              <input id="rename-character" />
+              <button class="btn primary" id="save-rename">保存名称</button>
+              <button class="btn danger" id="delete-character">删除当前角色</button>
+            </div>
+          </div>
+          <div class="panel">
+            <h3>本地备份</h3>
+            <p class="muted">所有数据默认保存在浏览器 localStorage。</p>
+            <div class="button-stack">
+              <button class="btn secondary" id="export-data">导出 JSON</button>
+              <label class="btn secondary file-btn">导入 JSON<input type="file" id="import-data" accept="application/json" /></label>
+              <button class="btn danger" id="reset-data">重置全部数据</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel source-panel">
+          <h3>数据说明</h3>
+          <ul>
+            <li>Boss Crystal：GMS v270 Heroic（Kronos）Intense Power Crystal，基础 GMS 表 ×5。</li>
+            <li>GMS 限制：每世界每周 180 个、每角色 14 个 Weekly Crystal。</li>
+            <li>高阶名单包含 First Adversary、Radiant Malefic Star、Limbo、Baldrix、Jupiter。</li>
+            <li>HEXA：使用当前 HEXA Matrix 核心 0→30 级材料表。</li>
+            <li>这是 v0.4 离线单文件版；Boss 价格与工具逻辑都内置在本 HTML 中。</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script>
+const BOSS_DATA = [
+  {id:'easy-cygnus',name:'Cygnus',difficulty:'Easy',price:45562500,maxParty:6,tier:'early'},
+  {id:'hard-hilla',name:'Hilla',difficulty:'Hard',price:56250000,maxParty:6,tier:'early'},
+  {id:'chaos-pink-bean',name:'Pink Bean',difficulty:'Chaos',price:64000000,maxParty:6,tier:'early'},
+  {id:'normal-cygnus',name:'Cygnus',difficulty:'Normal',price:72250000,maxParty:6,tier:'early'},
+  {id:'chaos-zakum',name:'Zakum',difficulty:'Chaos',price:81000000,maxParty:6,tier:'early'},
+  {id:'chaos-pierre',name:'Pierre',difficulty:'Chaos',price:81000000,maxParty:6,tier:'early'},
+  {id:'chaos-von-bon',name:'Von Bon',difficulty:'Chaos',price:81000000,maxParty:6,tier:'early'},
+  {id:'chaos-crimson-queen',name:'Crimson Queen',difficulty:'Chaos',price:81000000,maxParty:6,tier:'early'},
+  {id:'princess-no',name:'Princess No',difficulty:'Normal',price:81000000,maxParty:6,tier:'early'},
+  {id:'hard-magnus',name:'Magnus',difficulty:'Hard',price:95062500,maxParty:6,tier:'early'},
+  {id:'chaos-vellum',name:'Vellum',difficulty:'Chaos',price:105062500,maxParty:6,tier:'early'},
+  {id:'chaos-papulatus',name:'Papulatus',difficulty:'Chaos',price:132250000,maxParty:6,tier:'midgame'},
+  {id:'akechi',name:'Akechi Mitsuhide',difficulty:'Normal',price:144000000,maxParty:6,tier:'midgame'},
+  {id:'normal-lotus',name:'Lotus',difficulty:'Normal',price:162562500,maxParty:6,tier:'midgame'},
+  {id:'normal-damien',name:'Damien',difficulty:'Normal',price:169000000,maxParty:6,tier:'midgame'},
+  {id:'normal-slime',name:'Guardian Angel Slime',difficulty:'Normal',price:231673500,maxParty:6,tier:'midgame'},
+  {id:'easy-lucid',name:'Lucid',difficulty:'Easy',price:237009375,maxParty:6,tier:'midgame'},
+  {id:'easy-will',name:'Will',difficulty:'Easy',price:246744750,maxParty:6,tier:'midgame'},
+  {id:'normal-lucid',name:'Lucid',difficulty:'Normal',price:253828125,maxParty:6,tier:'midgame'},
+  {id:'normal-will',name:'Will',difficulty:'Normal',price:279075000,maxParty:6,tier:'midgame'},
+  {id:'normal-gloom',name:'Gloom',difficulty:'Normal',price:297675000,maxParty:6,tier:'midgame'},
+  {id:'normal-darknell',name:'Darknell',difficulty:'Normal',price:316875000,maxParty:6,tier:'midgame'},
+  {id:'hard-damien',name:'Damien',difficulty:'Hard',price:421875000,maxParty:6,tier:'midgame'},
+  {id:'hard-lotus',name:'Lotus',difficulty:'Hard',price:444675000,maxParty:6,tier:'midgame'},
+  {id:'hard-lucid',name:'Lucid',difficulty:'Hard',price:504000000,maxParty:6,tier:'midgame'},
+  {id:'chaos-gloom',name:'Gloom',difficulty:'Chaos',price:563945000,maxParty:6,tier:'midgame'},
+  {id:'normal-vhilla',name:'Verus Hilla',difficulty:'Normal',price:581880000,maxParty:6,tier:'midgame'},
+  {id:'chaos-slime',name:'Guardian Angel Slime',difficulty:'Chaos',price:600578125,maxParty:6,tier:'midgame'},
+  {id:'hard-will',name:'Will',difficulty:'Hard',price:621810000,maxParty:6,tier:'midgame'},
+  {id:'hard-darknell',name:'Darknell',difficulty:'Hard',price:667920000,maxParty:6,tier:'midgame'},
+  {id:'hard-vhilla',name:'Verus Hilla',difficulty:'Hard',price:762105000,maxParty:6,tier:'midgame'},
+  {id:'normal-seren',name:'Chosen Seren',difficulty:'Normal',price:880021875,maxParty:6,tier:'endgame'},
+  {id:'easy-kalos',name:'Kalos the Guardian',difficulty:'Easy',price:937500000,maxParty:6,tier:'endgame'},
+  {id:'easy-first-adversary',name:'First Adversary',difficulty:'Easy',price:985000000,maxParty:3,tier:'endgame'},
+  {id:'easy-kaling',name:'Kaling',difficulty:'Easy',price:1031250000,maxParty:6,tier:'endgame'},
+  {id:'hard-seren',name:'Chosen Seren',difficulty:'Hard',price:1096562500,maxParty:6,tier:'endgame'},
+  {id:'normal-kalos',name:'Kalos the Guardian',difficulty:'Normal',price:1300000000,maxParty:6,tier:'endgame'},
+  {id:'normal-first-adversary',name:'First Adversary',difficulty:'Normal',price:1365000000,maxParty:3,tier:'endgame'},
+  {id:'extreme-lotus',name:'Lotus',difficulty:'Extreme',price:1397500000,maxParty:2,tier:'endgame'},
+  {id:'normal-malefic-star',name:'Malefic Star',difficulty:'Normal',price:1452000000,maxParty:3,tier:'endgame'},
+  {id:'normal-kaling',name:'Kaling',difficulty:'Normal',price:1506500000,maxParty:6,tier:'endgame'},
+  {id:'normal-limbo',name:'Limbo',difficulty:'Normal',price:2100000000,maxParty:3,tier:'endgame'},
+  {id:'chaos-kalos',name:'Kalos the Guardian',difficulty:'Chaos',price:2600000000,maxParty:6,tier:'endgame'},
+  {id:'normal-baldrix',name:'Baldrix',difficulty:'Normal',price:2800000000,maxParty:3,tier:'endgame'},
+  {id:'hard-first-adversary',name:'First Adversary',difficulty:'Hard',price:2940000000,maxParty:3,tier:'endgame'},
+  {id:'normal-jupiter',name:'Jupiter',difficulty:'Normal',price:2965000000,maxParty:3,tier:'endgame'},
+  {id:'hard-kaling',name:'Kaling',difficulty:'Hard',price:2990000000,maxParty:6,tier:'endgame'},
+  {id:'hard-limbo',name:'Limbo',difficulty:'Hard',price:3745000000,maxParty:3,tier:'endgame'},
+  {id:'hard-malefic-star',name:'Malefic Star',difficulty:'Hard',price:3990000000,maxParty:3,tier:'endgame'},
+  {id:'hard-baldrix',name:'Baldrix',difficulty:'Hard',price:4200000000,maxParty:3,tier:'endgame'},
+  {id:'extreme-seren',name:'Chosen Seren',difficulty:'Extreme',price:4235000000,maxParty:6,tier:'endgame'},
+  {id:'hard-black-mage',name:'Black Mage',difficulty:'Hard',price:4500000000,maxParty:6,tier:'endgame',cadence:'monthly'},
+  {id:'extreme-kalos',name:'Kalos the Guardian',difficulty:'Extreme',price:5200000000,maxParty:6,tier:'endgame'},
+  {id:'extreme-first-adversary',name:'First Adversary',difficulty:'Extreme',price:5880000000,maxParty:3,tier:'endgame'},
+  {id:'hard-jupiter',name:'Jupiter',difficulty:'Hard',price:5953000000,maxParty:3,tier:'endgame'},
+  {id:'extreme-kaling',name:'Kaling',difficulty:'Extreme',price:6026000000,maxParty:6,tier:'endgame'},
+  {id:'extreme-black-mage',name:'Black Mage',difficulty:'Extreme',price:18000000000,maxParty:6,tier:'endgame',cadence:'monthly'}
+
+];
+
+// Boss display order follows the user's in-game/reference screenshots.
+const BOSS_ORDER = [
+  'Zakum','Magnus','Hilla','Papulatus','Pierre','Von Bon','Crimson Queen','Vellum','Pink Bean','Cygnus',
+  'Lotus','Damien','Guardian Angel Slime','Lucid','Will','Gloom','Verus Hilla','Darknell','Chosen Seren',
+  'Kalos the Guardian','First Adversary','Kaling','Malefic Star','Limbo','Baldrix','Jupiter','Princess No','Akechi Mitsuhide',
+  'Black Mage'
+];
+const BOSS_ORDER_INDEX = new Map(BOSS_ORDER.map((name,i)=>[name,i]));
+
+const HEXA = {
+  origin: {
+    erda:[0,1,1,1,2,2,2,3,3,10,3,3,4,4,4,4,4,5,15,5,5,5,5,5,5,6,6,6,7,20],
+    frag:[0,30,35,40,45,50,55,60,65,200,80,90,100,110,120,130,140,150,160,350,170,180,190,200,210,220,230,240,250,500]
+  },
+  ascent: {
+    erda:[5,1,1,1,2,2,2,3,3,10,3,3,4,4,4,4,4,5,15,5,5,5,5,5,5,6,6,6,7,20],
+    frag:[100,30,35,40,45,50,55,60,65,200,80,90,100,110,120,130,140,150,160,350,170,180,190,200,210,220,230,240,250,500]
+  },
+  mastery: {
+    erda:[3,1,1,1,1,1,1,2,2,5,2,2,2,2,2,2,2,2,3,8,3,3,3,3,3,3,3,3,4,10],
+    frag:[50,15,18,20,23,25,28,30,33,100,40,45,50,55,60,65,70,75,80,175,85,90,95,100,105,110,115,120,125,250]
+  },
+  boost: {
+    erda:[4,1,1,1,2,2,2,3,3,8,3,3,3,3,3,3,3,3,4,12,4,4,4,4,4,5,5,5,6,15],
+    frag:[75,23,27,30,34,38,42,45,49,150,60,68,75,83,90,98,105,113,120,263,128,135,143,150,158,165,173,180,188,375]
+  },
+  common: {
+    erda:[7,2,2,2,3,3,3,5,5,14,5,5,6,6,6,6,6,6,7,17,7,7,7,7,7,9,9,9,10,20],
+    frag:[125,38,44,50,57,63,69,75,82,300,110,124,138,152,165,179,193,207,220,525,234,248,262,275,289,303,317,330,344,750]
+  }
+};
+
+const STORAGE_KEY = 'gmsToolkitV041';
+const LEGACY_STORAGE_KEYS = ['gmsToolkitV04','gmsToolkitV02','gmsToolkitV011'];
+let state = loadState();
+let currentId = state.currentId;
+let optimizerCharacterFilter = 'all';
+
+function defaultState(){
+  const id = crypto.randomUUID ? crypto.randomUUID() : String(Date.now());
+  return {currentId:id,characters:[{id,name:'Main',bosses:{}}]};
+}
+function loadState(){
+  try{ const x=JSON.parse(localStorage.getItem(STORAGE_KEY)); if(x?.characters?.length) return x; }catch(e){}
+  for(const key of LEGACY_STORAGE_KEYS){
+    try{ const old=JSON.parse(localStorage.getItem(key)); if(old?.characters?.length) return old; }catch(e){}
+  }
+  return defaultState();
+}
+function saveState(){ state.currentId=currentId; localStorage.setItem(STORAGE_KEY,JSON.stringify(state)); }
+function currentChar(){ return state.characters.find(c=>c.id===currentId) || state.characters[0]; }
+function fmt(n){ return Math.floor(n).toLocaleString('en-US'); }
+function fmtShort(n){
+  if(n>=1e9) return (n/1e9).toFixed(n>=1e10?1:2).replace(/\.00$/,'')+'b';
+  if(n>=1e6) return (n/1e6).toFixed(n>=1e8?1:2).replace(/\.00$/,'')+'m';
+  return fmt(n);
+}
+function toast(msg){ const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800); }
+
+function getBossEntries(char=currentChar()){
+  return BOSS_DATA.filter(b=>char.bosses[b.id]?.selected).map(b=>{
+    const party=Math.max(1,Math.min(b.maxParty,Number(char.bosses[b.id]?.party||1)));
+    return {...b,cadence:b.cadence||'weekly',party,value:Math.floor(b.price/party)};
+  });
+}
+function charSummary(char=currentChar()){
+  const entries=getBossEntries(char);
+  const weeklySelected=entries.filter(x=>x.cadence==='weekly').sort((a,b)=>b.value-a.value);
+  const weeklyCounted=weeklySelected.slice(0,14);
+  const weeklyExcluded=weeklySelected.slice(14);
+  const monthly=entries.filter(x=>x.cadence==='monthly').sort((a,b)=>b.value-a.value);
+  const weeklyMeso=weeklyCounted.reduce((s,x)=>s+x.value,0);
+  const monthlyMeso=monthly.reduce((s,x)=>s+x.value,0);
+  return {
+    count:weeklyCounted.length,
+    selectedWeekly:weeklySelected.length,
+    meso:weeklyMeso,
+    weeklyMeso,monthlyMeso,totalMeso:weeklyMeso+monthlyMeso,
+    entries:[...weeklyCounted,...monthly],weeklySelected,weeklyCounted,weeklyExcluded,monthly
+  };
+}
+function worldSummary(){
+  const eligible=[];
+  const characterAutoHandled=[];
+  state.characters.forEach(c=>{
+    const s=charSummary(c);
+    [...s.weeklyCounted,...s.monthly].forEach(x=>eligible.push({...x,charName:c.name,charId:c.id}));
+    s.weeklyExcluded.forEach(x=>characterAutoHandled.push({...x,charName:c.name,charId:c.id,excludeReason:'角色 14 自动处理'}));
+  });
+  eligible.sort((a,b)=>b.value-a.value || a.charName.localeCompare(b.charName));
+  const counted=eligible.slice(0,180);
+  const worldExcluded=eligible.slice(180).map(x=>({...x,excludeReason:'世界 180 上限'}));
+  return {
+    count:counted.length,
+    selected:eligible.length,
+    rawSelected:eligible.length+characterAutoHandled.length,
+    meso:counted.reduce((s,x)=>s+x.value,0),
+    entries:counted,
+    eligible,
+    excluded:worldExcluded,
+    characterAutoHandled,
+    characterExcluded:characterAutoHandled,
+    worldExcluded
+  };
+}
+
+function renderCharacterSelect(){
+  const sel=document.getElementById('character-select');sel.innerHTML='';
+  state.characters.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.name;if(c.id===currentId)o.selected=true;sel.appendChild(o);});
+  document.getElementById('rename-character').value=currentChar().name;
+  document.getElementById('hero-character').textContent=currentChar().name;
+  document.getElementById('hero-rename-input').value=currentChar().name;
+  document.getElementById('hero-character').style.display='';
+  document.getElementById('hero-rename-btn').style.display='';
+  document.getElementById('hero-rename-editor').classList.remove('active');
+  document.getElementById('boss-char-name').textContent=currentChar().name;
+}
+
+function renderDashboard(){
+  const c=charSummary(), w=worldSummary();
+  document.getElementById('dash-char-crystals').textContent=`${c.count} / 14`;
+  document.getElementById('dash-char-meso').textContent=fmtShort(c.weeklyMeso);
+  document.getElementById('dash-world-crystals').textContent=`${w.count} / 180`;
+  document.getElementById('dash-world-meso').textContent=fmtShort(w.meso);
+  document.getElementById('dash-char-progress').style.width=Math.min(100,c.count/14*100)+'%';
+  document.getElementById('dash-world-progress').style.width=Math.min(100,w.count/180*100)+'%';
+
+  const list=document.getElementById('dash-boss-list');list.innerHTML='';
+  const top=[...c.weeklyCounted,...c.monthly].sort((a,b)=>b.value-a.value).slice(0,6);
+  if(!top.length) list.innerHTML='<div class="muted small">还没有选择任何 Boss。</div>';
+  top.forEach(b=>{const d=document.createElement('div');d.className='mini-row';d.innerHTML=`<div><strong>${b.name}</strong><div class="tag">${b.difficulty} · ${b.cadence==='monthly'?'Monthly':'Weekly'}</div></div><div class="tag">${b.party}人</div><strong>${fmtShort(b.value)}</strong>`;list.appendChild(d);});
+
+  const latestIds=['normal-jupiter','hard-baldrix','hard-malefic-star','hard-limbo','extreme-first-adversary','extreme-kaling'];
+  const latest=document.getElementById('latest-bosses');latest.innerHTML='';
+  latestIds.map(id=>BOSS_DATA.find(x=>x.id===id)).filter(Boolean).forEach(b=>{const d=document.createElement('div');d.className='latest-item';d.innerHTML=`<div class="latest-name">${b.name}</div><div class="latest-sub">${b.difficulty} · ${fmtShort(b.price)} solo</div>`;latest.appendChild(d);});
+}
+
+function difficultyRank(d){return {Easy:1,Normal:2,Hard:3,Chaos:4,Extreme:5}[d]||0;}
+function groupedBosses(cadence,q,tier){
+  const map=new Map();
+  BOSS_DATA.filter(b=>(b.cadence||'weekly')===cadence)
+    .filter(b=>tier==='all'||b.tier===tier)
+    .filter(b=>`${b.name} ${b.difficulty}`.toLowerCase().includes(q))
+    .forEach(b=>{if(!map.has(b.name))map.set(b.name,[]);map.get(b.name).push(b);});
+  return [...map.entries()].map(([name,diffs])=>({name,diffs:diffs.sort((a,b)=>difficultyRank(a.difficulty)-difficultyRank(b.difficulty))}))
+    .sort((a,b)=>{
+      const ai=BOSS_ORDER_INDEX.has(a.name)?BOSS_ORDER_INDEX.get(a.name):999;
+      const bi=BOSS_ORDER_INDEX.has(b.name)?BOSS_ORDER_INDEX.get(b.name):999;
+      return ai-bi || a.name.localeCompare(b.name);
+    });
+}
+function renderBossGroup(group,char,excludedIds){
+  const selected=group.diffs.find(b=>char.bosses[b.id]?.selected);
+  const party=selected?Math.max(1,Math.min(selected.maxParty,Number(char.bosses[selected.id]?.party||1))):1;
+  const row=document.createElement('div');
+  row.className='boss-group'+(selected?' selected':'')+(selected&&excludedIds.has(selected.id)?' excluded':'');
+  const diffHtml=group.diffs.map(b=>`<button class="diff-btn ${selected?.id===b.id?'active':''}" data-id="${b.id}" data-diff="${b.difficulty}" data-tooltip="Solo · ${fmt(b.price)} Meso" title="${b.difficulty} Solo: ${fmt(b.price)} Meso">${b.difficulty}</button>`).join('');
+  const opts=selected?Array.from({length:selected.maxParty},(_,i)=>i+1).map(n=>`<option value="${n}" ${n===party?'selected':''}>${n}</option>`).join(''):'<option>—</option>';
+  const value=selected?Math.floor(selected.price/party):0;
+  const excluded=selected&&excludedIds.has(selected.id);
+  row.innerHTML=`<div><div class="boss-group-name">${group.name}</div><div class="boss-group-sub">${selected?selected.difficulty+' · '+(selected.cadence==='monthly'?'Monthly':'Weekly'):'选择难度'}</div></div><div class="diff-buttons">${diffHtml}</div><div class="boss-group-party">队伍<select ${selected?'':'disabled'}>${opts}</select></div><div class="boss-group-value"><div class="boss-value-main">${selected?fmt(value):'0'}</div><div class="boss-value-note ${excluded?'drop':''}">${excluded?'不计入 Top 14':selected?'Meso / 人':'未选择'}</div></div>`;
+  row.querySelectorAll('.diff-btn').forEach(btn=>btn.addEventListener('click',()=>{
+    const id=btn.dataset.id, b=BOSS_DATA.find(x=>x.id===id); const already=!!char.bosses[id]?.selected;
+    group.diffs.forEach(x=>{if(char.bosses[x.id])char.bosses[x.id].selected=false;});
+    if(!already){
+      const previousParty=selected?party:1;
+      char.bosses[id]={selected:true,party:Math.min(b.maxParty,previousParty)};
+    }
+    saveState();renderAll();
+  }));
+  const select=row.querySelector('select');
+  if(selected) select.addEventListener('change',()=>{char.bosses[selected.id]={selected:true,party:Number(select.value)};saveState();renderAll();});
+  return row;
+}
+function optimizerRow(entry,kind){
+  const row=document.createElement('div');
+  row.className=`opt-row ${kind}`;
+  const cadence=entry.cadence==='monthly'?'Monthly':'Weekly';
+  const reason=kind==='drop'?`<div class="reason-tag">${entry.excludeReason||'低价值'}</div>`:'';
+  row.innerHTML=`<div><div class="opt-char">${escapeHtml(entry.charName)}</div><div class="opt-sub">${cadence}</div></div><div><div class="opt-boss">${escapeHtml(entry.name)} · ${entry.difficulty}</div><div class="opt-sub">${entry.party} 人 · Solo ${fmt(entry.price)}</div>${reason}</div><div class="opt-value">${fmt(entry.value)}</div>`;
+  return row;
+}
+function escapeHtml(value){
+  return String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
+}
+function renderOptimizer(){
+  const w=worldSummary();
+  document.getElementById('opt-char-count').textContent=String(state.characters.length);
+  document.getElementById('opt-eligible-count').textContent=String(w.selected);
+  document.getElementById('opt-sell-count').textContent=`${w.count} / 180`;
+  document.getElementById('opt-max-meso').textContent=fmtShort(w.meso);
+  const worldDropped=w.worldExcluded.length;
+  document.getElementById('opt-drop-foot').textContent=worldDropped?`世界上限需跳过 ${worldDropped} 颗`:'世界名额充足';
+
+  if(optimizerCharacterFilter!=='all' && !state.characters.some(c=>c.id===optimizerCharacterFilter)) optimizerCharacterFilter='all';
+  const filter=document.getElementById('optimizer-char-filter');
+  filter.innerHTML='';
+  const allOpt=document.createElement('option');allOpt.value='all';allOpt.textContent='全部角色';filter.appendChild(allOpt);
+  state.characters.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.name;filter.appendChild(o);});
+  filter.value=optimizerCharacterFilter;
+
+  const sellEntries=optimizerCharacterFilter==='all'?w.entries:w.entries.filter(x=>x.charId===optimizerCharacterFilter);
+  const dropEntries=optimizerCharacterFilter==='all'?w.worldExcluded:w.worldExcluded.filter(x=>x.charId===optimizerCharacterFilter);
+  const autoHandledEntries=optimizerCharacterFilter==='all'?w.characterAutoHandled:w.characterAutoHandled.filter(x=>x.charId===optimizerCharacterFilter);
+  const filteredMeso=sellEntries.reduce((sum,x)=>sum+x.value,0);
+  const filteredName=optimizerCharacterFilter==='all'?'全部角色':(state.characters.find(c=>c.id===optimizerCharacterFilter)?.name||'角色');
+
+  document.getElementById('opt-sell-summary').textContent=`${sellEntries.length} 颗 · ${fmt(filteredMeso)} Meso`;
+  document.getElementById('opt-drop-summary').textContent=dropEntries.length?`${dropEntries.length} 颗`:'0 颗';
+  document.getElementById('optimizer-filter-metrics').textContent=optimizerCharacterFilter==='all'
+    ? `当前显示：${w.entries.length} 卖 / ${w.worldExcluded.length} 世界跳过 · ${w.characterAutoHandled.length} 颗由角色14机制自动处理`
+    : `${filteredName}：建议卖 ${sellEntries.length} · 世界跳过 ${dropEntries.length} · 角色14自动处理 ${autoHandledEntries.length} · ${fmt(filteredMeso)} Meso`;
+
+  // Per-character world-slot allocation. This is the actionable layer once the in-game 14-crystal replacement mechanic is accounted for.
+  const quota=document.getElementById('optimizer-quota-grid');
+  quota.innerHTML='';
+  const quotaChars=optimizerCharacterFilter==='all'?state.characters:state.characters.filter(c=>c.id===optimizerCharacterFilter);
+  quotaChars.forEach(c=>{
+    const charEligible=w.eligible.filter(x=>x.charId===c.id);
+    const charSell=w.entries.filter(x=>x.charId===c.id);
+    const charWorldSkip=w.worldExcluded.filter(x=>x.charId===c.id);
+    const charAuto=w.characterAutoHandled.filter(x=>x.charId===c.id);
+    const charMeso=charSell.reduce((sum,x)=>sum+x.value,0);
+    const weeklyEligible=charEligible.filter(x=>x.cadence==='weekly').length;
+    const monthlyEligible=charEligible.filter(x=>x.cadence==='monthly').length;
+    const card=document.createElement('div');
+    card.className='quota-card'+(charWorldSkip.length?' warn':'');
+    card.innerHTML=`<div class="quota-top"><div class="quota-name">${escapeHtml(c.name)}</div><div class="quota-status">${charWorldSkip.length?'需控制出售':'可直接卖'}</div></div><div class="quota-main">建议占世界名额 <strong>${charSell.length}</strong> / ${charEligible.length}</div><div class="quota-sub">Weekly 候选 ${weeklyEligible}${monthlyEligible?` · Monthly ${monthlyEligible}`:''} · 世界跳过 ${charWorldSkip.length} · 角色14自动处理 ${charAuto.length} · 收益 ${fmt(charMeso)}</div>`;
+    quota.appendChild(card);
+  });
+  if(!quota.children.length) quota.innerHTML='<div class="empty-state">还没有角色数据。</div>';
+
+  const sell=document.getElementById('opt-sell-list'), drop=document.getElementById('opt-drop-list');
+  sell.innerHTML='';drop.innerHTML='';
+  if(!sellEntries.length) sell.innerHTML=`<div class="empty-state">${optimizerCharacterFilter==='all'?'还没有 Boss 数据。先到「搬蛋」页为各角色勾选能打的 Boss。':escapeHtml(filteredName)+' 当前没有建议出售的 Crystal。'}</div>`;
+  else sellEntries.forEach(x=>sell.appendChild(optimizerRow(x,'sell')));
+  if(!dropEntries.length) drop.innerHTML=`<div class="empty-state">${optimizerCharacterFilter==='all'?'当前账户没有超过世界 180 个可售名额，不需要为了世界上限主动跳过任何 Crystal。':escapeHtml(filteredName)+' 当前没有因为世界 180 上限而需要跳过的 Crystal。'}</div>`;
+  else dropEntries.forEach(x=>drop.appendChild(optimizerRow(x,'drop')));
+}
+function renderBosses(){
+  const q=document.getElementById('boss-search').value.trim().toLowerCase();
+  const tier=document.getElementById('boss-tier-filter').value;
+  const char=currentChar();
+  const s=charSummary();
+  const excludedIds=new Set(s.weeklyExcluded.map(x=>x.id));
+  const weeklyList=document.getElementById('weekly-boss-list'), monthlyList=document.getElementById('monthly-boss-list');
+  weeklyList.innerHTML='';monthlyList.innerHTML='';
+  const weeklyGroups=groupedBosses('weekly',q,tier), monthlyGroups=groupedBosses('monthly',q,tier);
+  if(!weeklyGroups.length)weeklyList.innerHTML='<div class="muted small">没有符合筛选条件的 Weekly Boss。</div>';
+  if(!monthlyGroups.length)monthlyList.innerHTML='<div class="muted small">没有符合筛选条件的 Monthly Boss。</div>';
+  weeklyGroups.forEach(g=>weeklyList.appendChild(renderBossGroup(g,char,excludedIds)));
+  monthlyGroups.forEach(g=>monthlyList.appendChild(renderBossGroup(g,char,excludedIds)));
+  document.getElementById('boss-selected-count').textContent=String(s.selectedWeekly);
+  document.getElementById('boss-count').textContent=`${s.count} / 14`;
+  document.getElementById('boss-weekly-total').textContent=`${fmt(s.weeklyMeso)} Meso`;
+  document.getElementById('boss-monthly-total').textContent=`${fmt(s.monthlyMeso)} Meso`;
+  document.getElementById('boss-total').textContent=`${fmt(s.totalMeso)} Meso`;
+  document.getElementById('boss-limit-warning').classList.toggle('hidden',s.selectedWeekly<=14);
+}
+
+function calcHexa(){
+  const type=document.getElementById('hexa-type').value;
+  let cur=Math.max(0,Math.min(30,Number(document.getElementById('hexa-current').value)||0));
+  let tar=Math.max(0,Math.min(30,Number(document.getElementById('hexa-target').value)||0));
+  if(tar<cur){[cur,tar]=[tar,cur];}
+  document.getElementById('hexa-current').value=cur;document.getElementById('hexa-target').value=tar;
+  const data=HEXA[type]; let e=0,f=0;
+  for(let lvl=cur;lvl<tar;lvl++){e+=data.erda[lvl]||0;f+=data.frag[lvl]||0;}
+  document.getElementById('hexa-erda').textContent=fmt(e);document.getElementById('hexa-frag').textContent=fmt(f);document.getElementById('hexa-range').textContent=`Lv.${cur} → Lv.${tar}`;
+}
+
+function renderAll(){renderCharacterSelect();renderDashboard();renderBosses();renderOptimizer();calcHexa();}
+function showView(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById('view-'+name).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.view===name));
+  const titles={dashboard:['总览','GMS Heroic / Kronos 实用助手'],boss:['搬蛋 / Boss Crystal','当前角色 Weekly Boss 与 Intense Power Crystal'],optimizer:['180 蛋自动最优化','以世界 180 名额为核心的账户级 Crystal 优化'],hexa:['六转 HEXA','Sol Erda / Fragment 材料计算'],data:['数据与备份','角色、本地数据与版本说明']};
+  document.getElementById('page-title').textContent=titles[name][0];document.getElementById('page-subtitle').textContent=titles[name][1];
+}
+
+document.getElementById('nav').addEventListener('click',e=>{const b=e.target.closest('.nav-btn');if(b)showView(b.dataset.view)});
+document.querySelectorAll('[data-jump]').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.jump)));
+document.getElementById('character-select').addEventListener('change',e=>{currentId=e.target.value;saveState();renderAll();});
+document.getElementById('add-character').addEventListener('click',()=>{const name=prompt('新角色名称：','Boss Mule');if(!name)return;const id=crypto.randomUUID?crypto.randomUUID():String(Date.now());state.characters.push({id,name:name.trim()||'Character',bosses:{}});currentId=id;saveState();renderAll();toast('角色已添加');});
+document.getElementById('boss-search').addEventListener('input',renderBosses);document.getElementById('boss-tier-filter').addEventListener('change',renderBosses);
+document.getElementById('optimizer-char-filter').addEventListener('change',e=>{optimizerCharacterFilter=e.target.value;renderOptimizer();});
+document.getElementById('boss-clear').addEventListener('click',()=>{if(confirm('清空当前角色的全部 Boss 选择？')){currentChar().bosses={};saveState();renderAll();}});
+
+function openInlineRename(){
+  const name=document.getElementById('hero-character'), btn=document.getElementById('hero-rename-btn'), editor=document.getElementById('hero-rename-editor'), input=document.getElementById('hero-rename-input');
+  input.value=currentChar().name; name.style.display='none'; btn.style.display='none'; editor.classList.add('active');
+  requestAnimationFrame(()=>{input.focus();input.select();});
+}
+function closeInlineRename(){
+  document.getElementById('hero-character').style.display='';
+  document.getElementById('hero-rename-btn').style.display='';
+  document.getElementById('hero-rename-editor').classList.remove('active');
+}
+function saveInlineRename(){
+  const v=document.getElementById('hero-rename-input').value.trim();
+  if(!v){toast('角色名称不能为空');return;}
+  currentChar().name=v;saveState();renderAll();toast('角色名称已更新');
+}
+document.getElementById('hero-rename-btn').addEventListener('click',openInlineRename);
+document.getElementById('hero-rename-save').addEventListener('click',saveInlineRename);
+document.getElementById('hero-rename-cancel').addEventListener('click',closeInlineRename);
+document.getElementById('hero-rename-input').addEventListener('keydown',e=>{if(e.key==='Enter')saveInlineRename();if(e.key==='Escape')closeInlineRename();});
+document.getElementById('hexa-calc').addEventListener('click',calcHexa);document.getElementById('hexa-type').addEventListener('change',calcHexa);document.getElementById('hexa-current').addEventListener('input',calcHexa);document.getElementById('hexa-target').addEventListener('input',calcHexa);
+document.getElementById('save-rename').addEventListener('click',()=>{const v=document.getElementById('rename-character').value.trim();if(!v)return;currentChar().name=v;saveState();renderAll();toast('名称已保存');});
+document.getElementById('delete-character').addEventListener('click',()=>{if(state.characters.length===1){toast('至少保留一个角色');return;}if(confirm('确定删除当前角色？')){state.characters=state.characters.filter(c=>c.id!==currentId);currentId=state.characters[0].id;saveState();renderAll();toast('角色已删除');}});
+document.getElementById('export-data').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='gms-toolkit-v0.2-backup.json';a.click();URL.revokeObjectURL(a.href);});
+document.getElementById('import-data').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const x=JSON.parse(await f.text());if(!x.characters?.length)throw new Error();state=x;currentId=x.currentId||x.characters[0].id;saveState();renderAll();toast('导入成功');}catch{toast('导入失败：文件格式不正确');}e.target.value='';});
+document.getElementById('reset-data').addEventListener('click',()=>{if(confirm('确定重置全部本地数据？')){state=defaultState();currentId=state.currentId;saveState();renderAll();toast('已重置');}});
+
+renderAll();
+
+</script>
+</body>
+</html>
